@@ -11,8 +11,8 @@ import java.util.List;
 
 @Getter
 public class CafeKiosk {
-    public static final LocalTime SHOP_OPEN_TIME = LocalTime.of(10,0);
-    public static final LocalTime SHOP_CLOSE_TIME = LocalTime.of(22,0);
+    public static final LocalTime SHOP_OPEN_TIME = LocalTime.of(10, 0);
+    public static final LocalTime SHOP_CLOSE_TIME = LocalTime.of(22, 0);
     private final List<Beverage> beverages = new ArrayList<>();
 
     public void add(Beverage beverage) {
@@ -37,14 +37,6 @@ public class CafeKiosk {
         beverages.clear();
     }
 
-    public int calculateTotalPrice() {
-        int totalPrice = 0;
-        for (Beverage beverage : beverages) {
-            totalPrice += beverage.getPrice();
-        }
-        return totalPrice;
-    }
-
     public Order createOrder() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalTime currentTime = currentDateTime.toLocalTime();
@@ -52,6 +44,12 @@ public class CafeKiosk {
             throw new IllegalArgumentException("주문 시간이 아닙니다. 관리자에게 문의하세요.");
         }
         return new Order(currentDateTime, beverages);
+    }
+
+    public int calculateTotalPrice() {
+        return beverages.stream()
+                .mapToInt(Beverage::getPrice)
+                .sum();
     }
 
     public Order createOrder(LocalDateTime currentDateTime) {
