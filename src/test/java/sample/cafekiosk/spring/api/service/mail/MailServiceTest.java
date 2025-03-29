@@ -3,9 +3,9 @@ package sample.cafekiosk.spring.api.service.mail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MailServiceTest {
 
-    @Spy
+    @Mock
     private MailSendClient mailSendClient;
 
     @Mock
@@ -32,21 +32,22 @@ class MailServiceTest {
     void sendMail() {
         // given
         // MailSendClient 가 @Mock 일 때
-        // when(mailSendClient.sendEmail(anyString(), anyString(), anyString(), anyString()))
-        //        .thenReturn(true);
+//        Mockito.when(mailSendClient.sendEmail(anyString(), anyString(), anyString(), anyString()))
+//                .thenReturn(true);
+
+        BDDMockito.given(mailSendClient.sendEmail(anyString(), anyString(), anyString(), anyString())).willReturn(true);
 
         // MailSendClient 가 @Spy 일 때
-        doReturn(true)
-                .when(mailSendClient)
-                .sendEmail(anyString(), anyString(), anyString(), anyString());
+//        doReturn(true)
+//                .when(mailSendClient)
+//                .sendEmail(anyString(), anyString(), anyString(), anyString());
 
         // when
         boolean result = mailService.sendMail("", "", "", "");
 
         //then
         assertThat(result).isTrue();
-        verify(mailSendHistoryRepository, times(1))
-                .save(any(MailSendHistory.class));
+        verify(mailSendHistoryRepository, times(1)).save(any(MailSendHistory.class));
     }
 
 
