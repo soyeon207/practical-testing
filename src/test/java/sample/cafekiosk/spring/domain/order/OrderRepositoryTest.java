@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import sample.cafekiosk.spring.IntegrationTestSupport;
+import sample.cafekiosk.spring.domain.orderproduct.OrderProduct;
+import sample.cafekiosk.spring.domain.orderproduct.OrderProductRepository;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductType;
@@ -19,8 +23,8 @@ import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.SELLIN
 
 
 @ActiveProfiles("test")
-@DataJpaTest
-class OrderRepositoryTest {
+@Transactional
+class OrderRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     OrderRepository orderRepository;
@@ -28,8 +32,12 @@ class OrderRepositoryTest {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    OrderProductRepository orderProductRepository;
+
     @AfterEach
     void tearDown() {
+        orderProductRepository.deleteAllInBatch();
         orderRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
     }
